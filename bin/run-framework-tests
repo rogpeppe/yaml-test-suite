@@ -167,9 +167,6 @@ for my $file (sort @files) {
         $tests{ $id }->{na} = 1;
         $sum_na++;
     }
-    elsif ($framework =~ m/-p6$/) {
-        $tests{ $id }->{na} = 1;
-    }
     else {
         my @events = @got;
         my @orig_events = @test_events;
