@@ -23,7 +23,7 @@ all: $(ALL_VIEWS)
 
 $(ALL_VIEWS): gh-pages data matrix
 	bash -c "printf '%.0s-' {1..80}; echo";
-	YAML_EDITOR=$$PWD/../yaml-editor time ./bin/run-framework-tests $@
+	YAML_EDITOR=$$PWD/../../yaml-editor time ./bin/run-framework-tests $@
 	./bin/create-matrix
 	rm -fr gh-pages/*.html gh-pages/css/
 	cp -r matrix/html/*.html matrix/html/css/ gh-pages/
