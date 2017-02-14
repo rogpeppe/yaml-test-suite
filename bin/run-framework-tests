@@ -170,15 +170,7 @@ for my $file (sort @files) {
     else {
         my @events = @got;
         my @orig_events = @test_events;
-        if ($framework eq "nimyaml-event") {
-            @test_events = minimal_events("nimyaml", @test_events);
-            @events = nim_event_to_event(@events);
-            $tests{ $id }->{minimal_events} = \@test_events;
-            $tests{ $id }->{transformed_events} = \@events;
-            push @events, "-STR";
-            unshift @events, "+STR";
-        }
-        elsif ($framework eq "pyyaml-event") {
+        if ($framework eq "pyyaml-event") {
             @test_events = minimal_events("pyyaml", @test_events);
             @events = map { py_event_to_event($_) } @events;
             $tests{ $id }->{minimal_events} = \@test_events;
