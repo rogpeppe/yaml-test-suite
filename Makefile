@@ -1,6 +1,27 @@
 .PHONY: data doc
 ALL_TML := $(shell echo test/*.tml)
 ALL_DATA := $(ALL_TML:test/%.tml=data/%)
+ALL_VIEWS := \
+	js-yaml-json \
+	java-json \
+	libyaml-event \
+	nimyaml-event \
+	perl5-pegex-event \
+	perl5-pm-pl \
+	perl5-pm-json \
+	perl5-pp-event \
+	perl5-syck-pl \
+	perl5-syck-json \
+	perl5-tiny-pl \
+	perl5-tiny-json \
+	perl5-xs-pl \
+	perl5-xs-json \
+	perl6-json \
+	perl6-p6 \
+	pyyaml-event \
+	ruby-json \
+
+ALL_MATRIX := $(ALL_VIEWS:%=matrix-%)
 
 default: help
 
@@ -19,14 +40,15 @@ ReadMe.pod: doc/yaml-test-suite.swim
 
 #------------------------------------------------------------------------------
 .PHONY: matrix
-matrix: gh-pages data
+matrix: gh-pages data $(ALL_MATRIX)
+
+$(ALL_MATRIX):
 	mkdir -p matrix
-	for f in `YAML_EDITOR=$$PWD/../yaml-editor ./bin/run-framework-tests -l`; \
-	    do bash -c "printf '%.0s-' {1..80}; echo"; \
-	    YAML_EDITOR=$$PWD/../yaml-editor time ./bin/run-framework-tests $$f; done
+	bash -c "printf '%.0s-' {1..80}; echo";
+	YAML_EDITOR=$$PWD/../yaml-editor time ./bin/run-framework-tests $(@:matrix-%=%)
 	./bin/create-matrix
 	rm -fr gh-pages/*.html gh-pages/css/
-	cp -r $@/html/*.html $@/html/css/ gh-pages/
+	cp -r matrix/html/*.html matrix/html/css/ gh-pages/
 
 perl5-%:
 	YAML_EDITOR=$$PWD/../yaml-editor ./bin/run-framework-tests $@
