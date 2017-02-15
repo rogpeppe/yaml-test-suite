@@ -18,12 +18,24 @@ ALL_VIEWS := \
 	pyyaml-event \
 	ruby-json \
 
+ifneq (,$(wildcard $(PWD)/../../yaml-editor))
+    YAML_EDITOR ?= $(PWD)/../../yaml-editor
+endif
+ifneq (,$(wildcard $(PWD)/../yaml-editor))
+    YAML_EDITOR ?= $(PWD)/../yaml-editor
+endif
+ifeq (,$(YAML_EDITOR))
+    $(error Cannot locate yaml-editor. Please set YAML_EDITOR)
+endif
+export YAML_EDITOR
+
+
 #------------------------------------------------------------------------------
-all: $(ALL_VIEWS)
+build: $(ALL_VIEWS)
 
 $(ALL_VIEWS): gh-pages data matrix
-	bash -c "printf '%.0s-' {1..80}; echo";
-	YAML_EDITOR=$$PWD/../../yaml-editor time ./bin/run-framework-tests $@
+	@bash -c "printf '%.0s-' {1..80}; echo";
+	time ./bin/run-framework-tests $@
 	./bin/create-matrix
 	rm -fr gh-pages/*.html gh-pages/css/
 	cp -r matrix/html/*.html matrix/html/css/ gh-pages/
@@ -33,6 +45,9 @@ matrix:
 
 data gh-pages:
 	git clone $$(git config remote.origin.url) -b $@ $@
+
+status:
+	@(cd gh-pages; git status --short)
 
 push:
 	@[ -z "$$(cd gh-pages; git status --short)" ] || { \
