@@ -87,7 +87,7 @@ sub create_html {
             $type = $name;
             $name = "yamlish";
         }
-        elsif ($lang eq 'pyyaml') {
+        elsif ($lang =~ /^(pyyaml|ruamel)$/) {
             $type = $name;
             $name = $lang;
             $lang = "python";

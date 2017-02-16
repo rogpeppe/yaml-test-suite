@@ -16,6 +16,7 @@ ALL_VIEWS := \
 	perl6-json \
 	perl6-p6 \
 	pyyaml-event \
+	ruamel-event \
 	ruby-json \
 
 ifneq (,$(wildcard $(PWD)/../../yaml-editor))

@@ -46,7 +46,10 @@ my @frameworks = qw/
 
     perl6-json
     perl6-p6
+
     pyyaml-event
+    ruamel-event
+
     ruby-json
 
 /;
@@ -170,8 +173,8 @@ for my $file (sort @files) {
     else {
         my @events = @got;
         my @orig_events = @test_events;
-        if ($framework eq "pyyaml-event") {
-            @test_events = minimal_events("pyyaml", @test_events);
+        if ($framework =~ /^(pyyaml|ruamel)-event$/) {
+            @test_events = minimal_events($1, @test_events);
             @events = map { py_event_to_event($_) } @events;
             $tests{ $id }->{minimal_events} = \@test_events;
             $tests{ $id }->{transformed_events} = \@events;
@@ -234,7 +237,7 @@ sub minimal_events {
             if ($event =~ s/^ (<.*?>)//) {
                 $ev .= " $1";
             }
-            if ($type eq 'pyyaml' and $event =~ s/^ ["'>|](.*)//) {
+            if ($type =~ /^(pyyaml|ruamel)$/ and $event =~ s/^ ["'>|](.*)//) {
                 $ev .= " :$1";
             }
             elsif ($type eq 'nimyaml' and $event =~ s/^ ['>|"](.*)//) {
